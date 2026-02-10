@@ -101,15 +101,15 @@ export default function Home() {
                 <Calendar className="w-6 h-6 text-primary" />
                 输入生辰信息
               </CardTitle>
-              <CardDescription>
-                请输入您的公历出生年月日时，系统将自动计算您的骨重
+                <CardDescription>
+                请输入您的农历出生年月日时，系统将自动计算您的骨重
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* 出生年份 */}
                 <div className="space-y-2">
-                  <Label htmlFor="year" className="text-base">出生年份</Label>
+                  <Label htmlFor="year" className="text-base">出生年份（农历）</Label>
                   <Input
                     id="year"
                     type="number"
@@ -124,15 +124,18 @@ export default function Home() {
 
                 {/* 出生月份 */}
                 <div className="space-y-2">
-                  <Label htmlFor="month" className="text-base">出生月份</Label>
+                  <Label htmlFor="month" className="text-base">出生月份（农历）</Label>
                   <Select value={month} onValueChange={setMonth}>
                     <SelectTrigger id="month" className="text-lg h-12">
                       <SelectValue placeholder="选择月份" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                        <SelectItem key={m} value={m.toString()}>
-                          {m}月
+                      {[
+                        "正月", "二月", "三月", "四月", "五月", "六月",
+                        "七月", "八月", "九月", "十月", "冬月", "腊月"
+                      ].map((m, i) => (
+                        <SelectItem key={i + 1} value={(i + 1).toString()}>
+                          {m}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -141,17 +144,24 @@ export default function Home() {
 
                 {/* 出生日期 */}
                 <div className="space-y-2">
-                  <Label htmlFor="day" className="text-base">出生日期</Label>
+                  <Label htmlFor="day" className="text-base">出生日期（农历）</Label>
                   <Select value={day} onValueChange={setDay}>
                     <SelectTrigger id="day" className="text-lg h-12">
                       <SelectValue placeholder="选择日期" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
-                        <SelectItem key={d} value={d.toString()}>
-                          {d}日
-                        </SelectItem>
-                      ))}
+                      {Array.from({ length: 30 }, (_, i) => i + 1).map((d) => {
+                        const dayStr = d <= 10 ? `初${['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'][d]}` :
+                                       d < 20 ? `十${['', '一', '二', '三', '四', '五', '六', '七', '八', '九'][d - 10]}` :
+                                       d === 20 ? '二十' :
+                                       d < 30 ? `廿${['', '一', '二', '三', '四', '五', '六', '七', '八', '九'][d - 20]}` :
+                                       '三十';
+                        return (
+                          <SelectItem key={d} value={d.toString()}>
+                            {dayStr}
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                 </div>
@@ -167,13 +177,29 @@ export default function Home() {
                       <SelectValue placeholder="选择时辰" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Array.from({ length: 24 }, (_, i) => i).map((h) => (
-                        <SelectItem key={h} value={h.toString()}>
-                          {h.toString().padStart(2, '0')}:00 - {(h + 1).toString().padStart(2, '0')}:00
+                      {[
+                        { name: '子时', time: '23:00-1:00', value: '23' },
+                        { name: '丑时', time: '1:00-3:00', value: '1' },
+                        { name: '寅时', time: '3:00-5:00', value: '3' },
+                        { name: '卯时', time: '5:00-7:00', value: '5' },
+                        { name: '辰时', time: '7:00-9:00', value: '7' },
+                        { name: '巳时', time: '9:00-11:00', value: '9' },
+                        { name: '午时', time: '11:00-13:00', value: '11' },
+                        { name: '未时', time: '13:00-15:00', value: '13' },
+                        { name: '申时', time: '15:00-17:00', value: '15' },
+                        { name: '酉时', time: '17:00-19:00', value: '17' },
+                        { name: '戌时', time: '19:00-21:00', value: '19' },
+                        { name: '亥时', time: '21:00-23:00', value: '21' },
+                      ].map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.name}（{item.time}）
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                    提示：时辰如果正遢1点的，就算下一个时辰的丑时，正3点的，就算下一个时辰的寅时，正5点的，就算下一个时辰卯时，其他类推。若逢夏时制出生的，就提前一个小时算。
+                  </p>
                 </div>
               </div>
 
@@ -229,13 +255,23 @@ export default function Home() {
                     <div className="text-center p-4 bg-muted/50 rounded-lg">
                       <div className="text-sm text-muted-foreground mb-2">月份</div>
                       <div className="text-2xl font-bold text-primary">
-                        {month}月
+                        {[
+                          "正月", "二月", "三月", "四月", "五月", "六月",
+                          "七月", "八月", "九月", "十月", "冬月", "腊月"
+                        ][parseInt(month) - 1]}
                       </div>
                     </div>
                     <div className="text-center p-4 bg-muted/50 rounded-lg">
                       <div className="text-sm text-muted-foreground mb-2">日期</div>
                       <div className="text-2xl font-bold text-primary">
-                        {day}日
+                        {(() => {
+                          const d = parseInt(day);
+                          return d <= 10 ? `初${['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'][d - 1]}` :
+                                 d < 20 ? `十${['一', '二', '三', '四', '五', '六', '七', '八', '九'][d - 11]}` :
+                                 d === 20 ? '二十' :
+                                 d < 30 ? `廿${['一', '二', '三', '四', '五', '六', '七', '八', '九'][d - 21]}` :
+                                 '三十';
+                        })()}
                       </div>
                     </div>
                     <div className="text-center p-4 bg-muted/50 rounded-lg">
