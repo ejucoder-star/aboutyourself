@@ -198,7 +198,7 @@ export default function Home() {
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-                    提示：时辰如果正遢1点的，就算下一个时辰的丑时，正3点的，就算下一个时辰的寅时，正5点的，就算下一个时辰卯时，其他类推。若逢夏时制出生的，就提前一个小时算。
+                    提示：时辰如果正逢1点的，就算下一个时辰的丑时，正3点的，就算下一个时辰的寅时，正5点的，就算下一个时辰卯时，其他类推。若逢夏时制出生的，就提前一个小时算。
                   </p>
                 </div>
               </div>
