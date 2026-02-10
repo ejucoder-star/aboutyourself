@@ -13,10 +13,13 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { calculateBoneWeight, formatWeight, getFortuneDescription } from "@/lib/boneWeightData";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, Clock, Sparkles } from "lucide-react";
+import { Calendar, Clock, Sparkles, Key, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 
 export default function Home() {
+  // 表单状态
   const [year, setYear] = useState<string>("");
   const [month, setMonth] = useState<string>("");
   const [day, setDay] = useState<string>("");
@@ -90,21 +93,21 @@ export default function Home() {
 
         {/* 输入表单 */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-2xl mx-auto mb-12"
-        >
-          <Card className="border-2 border-primary/20 shadow-2xl bg-card/80 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-2xl flex items-center gap-2">
-                <Calendar className="w-6 h-6 text-primary" />
-                输入生辰信息
-              </CardTitle>
-                <CardDescription>
-                请输入您的农历出生年月日时，系统将自动计算您的骨重
-              </CardDescription>
-            </CardHeader>
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-2xl mx-auto mb-12"
+          >
+            <Card className="border-2 border-primary/20 shadow-2xl bg-card/80 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-2xl flex items-center gap-2">
+                  <Calendar className="w-6 h-6 text-primary" />
+                  输入生辰信息
+                </CardTitle>
+                  <CardDescription>
+                  请输入您的农历出生年月日时，系统将自动计算您的骨重
+                </CardDescription>
+              </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* 出生年份 */}
