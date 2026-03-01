@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
-import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
+// import { vitePluginManusRuntime } from "vite-plugin-manus-runtime"; // Disabled for Vercel
 
 // =============================================================================
 // Manus Debug Collector - Vite Plugin
@@ -74,7 +74,10 @@ function writeToLogFile(source: LogSource, entries: unknown[]) {
  * - Files: browserConsole.log, networkRequests.log, sessionReplay.log
  * - Auto-trimmed when exceeding 1MB (keeps newest entries)
  */
-function vitePluginManusDebugCollector(): Plugin {
+function vitePluginManusDebugCollector(): Plugin | null {
+  if (process.env.NODE_ENV === "production") {
+    return null;
+  }
   return {
     name: "manus-debug-collector",
 
@@ -147,10 +150,16 @@ function vitePluginManusDebugCollector(): Plugin {
         });
       });
     },
-  };
+  } as Plugin;
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+const plugins = [
+  react(),
+  tailwindcss(),
+  jsxLocPlugin(),
+  // vitePluginManusRuntime(), // Disabled for Vercel
+  vitePluginManusDebugCollector(),
+].filter((p): p is Plugin => p !== null);
 
 export default defineConfig({
   plugins,
@@ -178,6 +187,7 @@ export default defineConfig({
       ".manusvm.computer",
       "localhost",
       "127.0.0.1",
+      ".vercel.app", // Add Vercel domain
     ],
     fs: {
       strict: true,

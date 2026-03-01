@@ -35,3 +35,13 @@
 - [ ] 创建检查点
 - [ ] 编写使用文档
 - [ ] 交付给用户
+
+## Vercel部署配置
+- [x] 创建vercel.json配置文件
+- [x] 创建api/handler.ts Serverless函数
+- [x] 修改package.json构建脚本
+- [x] 更新vite.config.ts移除Manus特定插件
+- [x] 本地构建测试
+- [ ] 推送到GitHub
+- [ ] 在Vercel中配置环境变量
+- [ ] 验证Vercel部署成功
