@@ -2,16 +2,6 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist/public",
   "framework": "vite",
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "api/handler.ts": {
-      "runtime": "nodejs22.x",
-      "memory": 1024,
-      "maxDuration": 30
-    }
-  },
   "rewrites": [
     {
       "source": "/api/:path*",
